@@ -27,7 +27,8 @@ export default async function MainPage() {
         </Link>
       </header>
       <div className="mt-8 flex flex-wrap gap-4">
-        <TaskCard />
+        {/* mapの中のラムダ式で() => {}の{}を使うならreturnで戻り値をかく */}
+        {allTasks.map((task) => (<TaskCard key={task._id} task={task}/>))}
       </div>
     </div>
   );
