@@ -1,5 +1,5 @@
-import TaskDeleteButton from "./TaskDeleteButton/TaskDeleteButton"
-import TaskEditButton from "./TaskEditButton/TaskEditButton"
+import TaskDeleteButton from "@/components/TaskCard/TaskDeleteButton/TaskDeleteButton"
+import TaskEditButton from "@/components/TaskCard/TaskEditButton/TaskEditButton"
 
 const TaskCard = () => {
   return (
