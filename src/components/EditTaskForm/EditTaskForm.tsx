@@ -1,7 +1,9 @@
 "use client"
 
+import { FormState, updateTask } from "@/actions/task";
 import { TaskDocument } from "@/models/task"
 import { useState } from "react";
+import { useFormState, useFormStatus } from "react-dom";
 
 interface EditTaskProps {
   task: TaskDocument;
@@ -13,9 +15,30 @@ const EditTaskForm: React.FC<EditTaskProps> = ({ task }) => {
   const [dueDate, setDueDate] = useState(task.dueDate)
   const [isCompleted, setIsCompleted] = useState(task.isCompleted)
   
+  // idを引数に持つupdateTask関数を作成する
+  const updateTaskWithId = updateTask.bind(null, task._id)
+  
+  const initialState: FormState = { error: "" }
+  // server actionsの状態とアクションを取得する
+  const [state, formAction] = useFormState(updateTaskWithId ,initialState)
+
+  const SubmitButton = () => {
+    const { pending } = useFormStatus()
+
+    return (
+      <button
+        type="submit"
+        className="mt-8 py-2 w-full rounded-md text-white bg-gray-800 hover:bg-gray-700 text-sm font-semibold shadow-sm disabled:bg-gray-400"
+        disabled={pending}
+      >
+        Update
+      </button>
+    )
+  }
+    
   return (
     <div className="mt-10 mx-auto w-full max-w-sm">
-      <form>
+      <form action={formAction}>
         <div>
           <label htmlFor="title" className="block text-sm font-medium">タイトル</label>
           <input
@@ -64,6 +87,12 @@ const EditTaskForm: React.FC<EditTaskProps> = ({ task }) => {
           />
           <label htmlFor="isCompleted" className="text-sm">タスクを完了にする</label>
         </div>
+        <SubmitButton />
+        {state.error && (
+          <p className="mt-2 text-red-500 text-sm">
+            {state.error}
+          </p>
+        )}
       </form>
     </div>
   )
