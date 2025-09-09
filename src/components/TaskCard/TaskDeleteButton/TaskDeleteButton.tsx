@@ -1,17 +1,39 @@
+"use client"
+
+import { deleteTask, FormState } from "@/actions/task";
+import { useEffect } from "react";
+import { useFormState, useFormStatus } from "react-dom";
 import { FaTrashAlt } from "react-icons/fa";
 
 interface TaskDeleteButtonProps {
     id: string;
 }
 
-// Server Actionsで後で削除処理を実行する予定
-
 const TaskDeleteButton: React.FC<TaskDeleteButtonProps> = ({ id }) => {
-  return (
-    <form action="">
-        <button type="submit">
-            <FaTrashAlt className="hover:text-gray-700 text-lg cursor-pointer"/>
+  const deleteTaskWithId = deleteTask.bind(null, id);
+  const initialState: FormState = { error: "" };
+  // server actionsの状態とアクションを取得する
+  const [state, formAction] = useFormState(deleteTaskWithId ,initialState); // これを使うためにuse client
+  
+  useEffect(() => {
+    if (state && state.error !== "") {
+      alert(state.error)
+    }
+  },[state])
+
+  const SubmitButton = () => {
+    const { pending } = useFormStatus()
+
+    return (
+        <button type="submit" disabled={pending}>
+            <FaTrashAlt className="hover:text-gray-700 text-lg cursor-pointer disabled:bg-gray-400"/>
         </button>
+    )
+  }
+  
+  return (
+    <form action={formAction}>
+      <SubmitButton />
     </form>
   )
 }

@@ -47,7 +47,17 @@ export const updateTask = async (id:string, state: FormState, formData: FormData
     return state
   }
   
-  // 作成に成功したらリダイレクト
-  // try-catchの中だと上手く動かないらしい
+  redirect("/")
+}
+
+export const deleteTask = async (id:string, state: FormState) => {
+  try {
+    await connectDb()
+    await TaskModel.deleteOne({_id: id})
+  } catch (error) {
+    state.error = "タスクの削除に失敗しました。"
+    return state
+  }
+
   redirect("/")
 }
